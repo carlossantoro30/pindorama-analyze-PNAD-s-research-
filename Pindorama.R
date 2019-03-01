@@ -79,20 +79,18 @@ if(v_ano_nasc %in% names(dado_b)){
 dado_c <- pnadc_design(dado_b)
 
 #Filtro para o DF
+sub_var <- dado_c[,sub_var]
 dado_c <- subset(dado_c, any(sub_var == condicionais))
 
-#Combina sexo com idade
+#Combina as variáveis (contagem da população em cada interseção)
 s1 <- "interaction_data <- svytotal(~ interaction("
 s2 <- paste(ana_var, collapse = ",")
 s3 <- "), design = dado_c, na.rm = TRUE)"
 s <- paste(s1,s2,s3, sep="", collapse = NULL)
 eval(parse(text = s)) #interaction_data <- svytotal(~ interaction(ana_var), design = dado_c, na.rm = TRUE)
 
-ana_var_regex <- gsub(ana_var, pattern = "\\.", replacement = "\\\\.")
-
-s1 <- "interaction\\("
-s2 <- paste(ana_var_regex, collapse = ", ")
-pad <- V2007, Faixa\\.Idade, Faixa\\.Renda\\)" #Regex ser removido das strings
+#
+pad <- "interaction\\(.*\\)" #Regex ser removido das strings
 ftable(interaction_data) %>%
         as_data_frame() %>%
         filter(Var2 == "A") %>%
